@@ -1,0 +1,33 @@
+name: MicroContainer CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: make
+      - name: Unit and CLI tests
+        run: make test
+      - name: Debug build
+        run: make debug
+      - name: Sanitizer build and tests
+        run: make sanitize
+
+  privileged-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install integration dependencies
+        run: sudo apt-get update && sudo apt-get install -y debootstrap iproute2
+      - name: Build
+        run: make
+      - name: Launch isolated container and verify cleanup
+        run: sudo make integration

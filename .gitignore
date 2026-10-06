@@ -1,0 +1,4 @@
+/build/
+/rootfs/*
+!/rootfs/.gitkeep
+/rootfs-test/

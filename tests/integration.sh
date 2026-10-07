@@ -45,6 +45,9 @@ else
     echo "SKIP: iproute2 is required for the veth integration test"
 fi
 
+cgroup_parent=/sys/fs/cgroup/microcontainer
+   mkdir -p "$cgroup_parent" 2>/dev/null || true
+   echo "+memory +pids" > "$cgroup_parent/cgroup.subtree_control" 2>/dev/null || true
 if grep -qw memory /sys/fs/cgroup/cgroup.subtree_control 2>/dev/null &&
    grep -qw pids /sys/fs/cgroup/cgroup.subtree_control 2>/dev/null; then
     if ! "$binary" run --memory 64M --pids 32 "$rootfs" /bin/sh -c \
